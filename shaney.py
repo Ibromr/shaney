@@ -7,7 +7,7 @@ import os, sys, string, random
 # 'contexts' is a frequency table, populated here.
 # 'words' is an ordered list of words.
 # 'n' is the number of words in each context window.
-def build(contexts, words, n):
+def buildWordContext(contexts, words, n):
 	context = words[:n]
 	for word in words[n:]:
 		key = tuple(context)
@@ -20,7 +20,7 @@ def build(contexts, words, n):
 # Generate semi-random output.
 # Print a random starting point and continue from there.
 # 'starters' is a list of possible starter contexts.
-def generate(f, starters, contexts):
+def generateRandom(f, starters, contexts):
 	context = random.choice(starters)
 	f.write(" ".join(context))
 	while True:
@@ -28,14 +28,14 @@ def generate(f, starters, contexts):
 		wordfreq = contexts.get(key, {})
 		if not wordfreq:
 				break
-		word = choose(wordfreq)
+		word = chooseWord(wordfreq)
 		f.write(" " + word)
 		context = context[1:] + [word]
 	f.write("\n")
 
 # Randomly choose one word from a {word->frequency}
 # dictionary, the choice being weighted by frequency.
-def choose(wordfreq):
+def chooseWord(wordfreq):
 	# Calculate the total instances.
 	total = 0
 	for w,count in wordfreq.items():
@@ -69,13 +69,13 @@ def main():
 		f = open(data_dir + filename, encoding="utf-8")
 		words = f.read().split()
 		starters.append(words[:2])
-		build(contexts, words, 2)
+		buildWordContext(contexts, words, 2)
 
 	# Print words at random, starting at some initial context.
 	out_file = "output.txt"
 	print("Writing " + out_file)
 	f = open(out_file, "w")
-	generate(f, starters, contexts)
+	generateRandom(f, starters, contexts)
 	f.close()
 
 if __name__ == '__main__':
