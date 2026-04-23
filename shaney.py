@@ -55,9 +55,9 @@ def choose(wordfreq):
 def main():
 	# Initialise.
 	data_dir = "data/"
-	n = 2
+	context_size = 2
 	for arg in sys.argv[1:]:
-		if arg.isnumeric(): n = int(arg)
+		if arg.isnumeric(): context_size = int(arg)
 		else: data_dir = arg
 
 	# Build the frequency table by reading the input text(s).
@@ -66,17 +66,17 @@ def main():
 
 	for filename in sorted(os.listdir(data_dir)):
 		print("Reading " + data_dir + filename)
-		f = open(data_dir + filename, encoding="utf-8")
-		words = f.read().split()
+		input_file = open(data_dir + filename, encoding="utf-8")
+		words = input_file.read().split()
 		starters.append(words[:2])
 		build(contexts, words, 2)
 
 	# Print words at random, starting at some initial context.
 	out_file = "output.txt"
 	print("Writing " + out_file)
-	f = open(out_file, "w")
-	generate(f, starters, contexts)
-	f.close()
+	output_file = open(out_file, "w")
+	generate(output_file, starters, contexts)
+	output_file.close()
 
 if __name__ == '__main__':
 	main()
